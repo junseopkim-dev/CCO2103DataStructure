@@ -6,10 +6,12 @@
 public class PostfixCalculator implements IPostfixCalculator
 {   
     // you may declare additional variables here.
-
+    private Stack<Integer> stack;
     public PostfixCalculator()
     {
         // implement your constructor here.
+        this.stack = new Stack<Integer>();
+
     }
 
 
@@ -30,6 +32,27 @@ public class PostfixCalculator implements IPostfixCalculator
         *       the evaluation will an intermediate value be large enough to
         *       overflow the Java int type. However, it can go below 0.
         */
-        return -1;
+        String[] token = exp.split(" ");
+        for (String t : token){
+            if(t.equals("+")){
+                int operand1 = stack.pop();
+                int operand2 = stack.pop();
+                stack.push(operand2 + operand1);
+            }
+            else if(t.equals("-")){
+                int operand1 = stack.pop();
+                int operand2 = stack.pop();
+                stack.push(operand2 - operand1);
+            }
+            else if(t.equals("x")){
+                int operand1 = stack.pop();
+                int operand2 = stack.pop();
+                stack.push(operand2 * operand1);
+            }
+            else{
+                stack.push(Integer.parseInt(t));
+            }
+        }
+        return stack.pop();
     }
 }
