@@ -14,10 +14,13 @@ public final class Stack<T> implements IStack<T> {
      * you may declare variables here
      */
 
+    private LinkedList<T> list;
+
     Stack(){
         /*
          * implement your constructor here
          */
+        list = new LinkedList<T>();
     }
 
     @Override
@@ -29,6 +32,7 @@ public final class Stack<T> implements IStack<T> {
          * Job:
          * add e to Stack as the top element
          */
+        list.insert(0,e);
     }
 
     @Override
@@ -41,7 +45,12 @@ public final class Stack<T> implements IStack<T> {
          * remove and return the top element.
          * if stack is empty, return null.
          */
-        return null;
+        if(isEmpty()){
+            return null;
+        }
+        T data = list.getData(0);
+        list.remove(0);
+        return data;
     }
 
     @Override
@@ -55,7 +64,10 @@ public final class Stack<T> implements IStack<T> {
          * do not remove the returned element.
          * if stack is empty, return null.
          */
-        return null;
+        if(isEmpty()){
+            return null;
+        }
+        return list.getData(0);
     }
 
     @Override
@@ -67,6 +79,7 @@ public final class Stack<T> implements IStack<T> {
          * Job:
          * clear the stack.
          */
+        list.clear();
     }
 
     @Override
@@ -79,7 +92,7 @@ public final class Stack<T> implements IStack<T> {
          * return the number of elements in the stack.
          * this operation should run in O(1) time.
          */
-        return -1;
+        return list.getSize();
     }
 
     @Override
@@ -91,6 +104,6 @@ public final class Stack<T> implements IStack<T> {
          * return true if there are no elements left in the Queue.
          * return false otherwise.
          */
-        return true;
+        return list.getSize()==0;
     }
 }

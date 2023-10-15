@@ -9,21 +9,24 @@
  * provide, you may receive a 0 for the homework.
  */
 
+
 public final class Queue<T> implements IQueue<T> {
     /* 
      * you may declare variables here
      */
-
+    private LinkedList<T> list;
     int size;
 
     Queue(){
         /*
          * implement your constructor here
          */
+        list = new LinkedList<T>();
+        size =0;
     }
 
     @Override
-    public void enqueue(T e) {
+    public void enqueue(T e) {  // head를 index 0, tail을 끝 index로 설정합니다.
         /*
          * Function input:
          *  + e: element to enqueue
@@ -32,6 +35,8 @@ public final class Queue<T> implements IQueue<T> {
          * add e to Queue as the last element
          * this method should run in O(1) time.
          */
+        list.insert(size,e);
+        size++;
     }
 
     @Override
@@ -45,7 +50,13 @@ public final class Queue<T> implements IQueue<T> {
          * if queue is empty, return null.
          * this method should run in O(1) time.
          */
-        return null;
+        if(isEmpty()){
+            return null;
+        }
+        T temp = peek();
+        list.remove(0);
+        size--;
+        return temp;
     }
 
     
@@ -58,6 +69,8 @@ public final class Queue<T> implements IQueue<T> {
          * Job:
          * clear the queue.
          */
+        list.clear();
+        size =0;
     }
 
     @Override
@@ -72,7 +85,10 @@ public final class Queue<T> implements IQueue<T> {
          * if queue is empty, return null.
          * this method should run in O(1) time.
          */
-        return null;
+        if(isEmpty()){
+            return null;
+        }
+        return list.getData(0);
     }
 
     @Override
@@ -85,7 +101,7 @@ public final class Queue<T> implements IQueue<T> {
          * return the number of elements in the queue.
          * this method should run in O(1) time.
          */
-        return -1;
+        return size;
     }
 
     @Override
@@ -99,6 +115,6 @@ public final class Queue<T> implements IQueue<T> {
          * return false otherwise.
          * this method should run in O(1) time.
          */
-        return true;
+        return size == 0;
     }
 }
