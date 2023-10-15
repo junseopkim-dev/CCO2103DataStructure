@@ -62,19 +62,27 @@ public class MatchMaker implements IMatchMaker {
 
 
 			if(tind == 0){  //6명이 모인 티어가 아이언이라, 이웃한 하위 티어가 없는 경우
-				if (tiers[tind+1].peek().order < tiers[tind].peek().order){
+				if (tiers[tind + 1].getSize() > 0 && tiers[tind+1].peek().order < tiers[tind].peek().order){
 					warriors[0] = tiers[tind+1].dequeue().player;
 				}
+				else{
+					warriors[0] = tiers[tind].dequeue().player;
+				}
+
 				warriors[1] = tiers[tind].dequeue().player;
 			}
 			else if(tind == 6){ //6명이 모인 티어가 다이아라, 이웃한 상위 티어가 없는 경우
-				if (tiers[tind-1].peek().order < tiers[tind].peek().order){
+				if (tiers[tind - 1].getSize() > 0 && tiers[tind-1].peek().order < tiers[tind].peek().order){
 					warriors[0] = tiers[tind-1].dequeue().player;
 				}
+				else{
+					warriors[0] = tiers[tind].dequeue().player;
+				}
+
 				warriors[1] = tiers[tind].dequeue().player;
 			}
 			else{ //그 외 일반적인 상황
-				if (tiers[tind+1].peek().order < tiers[tind].peek().order && tiers[tind+1].peek().order < tiers[tind-1].peek().order){
+				if (tiers[tind + 1].getSize() > 0 &&tiers[tind - 1].getSize() > 0 &&tiers[tind+1].peek().order < tiers[tind].peek().order && tiers[tind+1].peek().order < tiers[tind-1].peek().order){
 					warriors[0] = tiers[tind+1].dequeue().player;
 					if(tiers[tind-1].peek().order < tiers[tind].peek().order){
 						warriors[1] = tiers[tind-1].dequeue().player;
@@ -83,7 +91,7 @@ public class MatchMaker implements IMatchMaker {
 						warriors[1] = tiers[tind].dequeue().player;
 					}
 				}
-				else if (tiers[tind-1].peek().order < tiers[tind].peek().order && tiers[tind-1].peek().order < tiers[tind+1].peek().order){
+				else if (tiers[tind + 1].getSize() > 0 &&tiers[tind - 1].getSize() > 0 &&tiers[tind-1].peek().order < tiers[tind].peek().order && tiers[tind-1].peek().order < tiers[tind+1].peek().order){
 					warriors[0] = tiers[tind-1].dequeue().player;
 					if(tiers[tind+1].peek().order < tiers[tind].peek().order){
 						warriors[1] = tiers[tind+1].dequeue().player;
