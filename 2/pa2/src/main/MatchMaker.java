@@ -15,7 +15,7 @@ public class MatchMaker implements IMatchMaker {
 		// constructor
 		tiers = new Queue[7]; //'이웃'한 티어를 구현하기 편하도록 array로 정의
 		for (int i = 0; i<7;i++){
-			tiers[i] = new Queue<>();
+			tiers[i] = new Queue<Player>();
 		}
 	}
 
@@ -30,7 +30,7 @@ public class MatchMaker implements IMatchMaker {
 		 *  - if none meets the criteria, returns null.
 		 *  - the returned Player array should contain the Players exactly in the order of their arrival.
 		 *  - refer to the assignment specification for the exact criteria.
-		 * 
+		 *
 		 * Does:
 		 *  - keeps track of the Players that are waiting for matchmaking and their order of arrival using the queue you implemented.
 		 */
@@ -52,8 +52,10 @@ public class MatchMaker implements IMatchMaker {
 				}
 
 				if(!tiers[tind + i].isEmpty()){ //이웃 티어의 인원이 비어있지 않다면
+
 					Player neighbor = tiers[tind + i].peek();
 
+					/*
 
 					if(neighbor.equals(warriors[5]) || neighbor.equals(warriors[4])){
 						continue;
@@ -65,6 +67,8 @@ public class MatchMaker implements IMatchMaker {
 					else if (neighbor.getPlayerID() < warriors[4].getPlayerID()){
 						warriors[4] = tiers[tind + i].dequeue();
 					}
+
+					 */
 				}
 			}
 			return warriors;
