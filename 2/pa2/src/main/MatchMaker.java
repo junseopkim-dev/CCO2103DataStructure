@@ -10,12 +10,28 @@
  */
 
 public class MatchMaker implements IMatchMaker {
-	private Queue<Player>[] tiers;
+	private Queue<PlayerInfo>[] tiers;
+
+	private int count;
+
+	private class PlayerInfo { //들어오는 순서 order 저장하는 새로운 클래스 PlayerInfo
+		Player player;
+		int order;
+
+		PlayerInfo(Player player, int order) {
+			this.player = player;
+			this.order = order;
+		}
+	}
+
+
 	public MatchMaker(){
 		// constructor
 		tiers = new Queue[7]; //'이웃'한 티어를 구현하기 편하도록 array로 정의
+		count = 0;
+
 		for (int i = 0; i<7;i++){
-			tiers[i] = new Queue<Player>();
+			tiers[i] = new Queue<PlayerInfo>();
 		}
 	}
 
@@ -34,48 +50,63 @@ public class MatchMaker implements IMatchMaker {
 		 * Does:
 		 *  - keeps track of the Players that are waiting for matchmaking and their order of arrival using the queue you implemented.
 		 */
-		Tier playerTier = player.getTier();
-		int tind = playerTier.ordinal();
-		tiers[tind].enqueue(player);
 
-		if(tiers[tind].getSize() >=6){ // 같은 티어에 6명 이상이 대기중일 경우
+		PlayerInfo pi = new PlayerInfo(player,count);
+		Tier playerTier = player.getTier();
+		int tind = playerTier.ordinal(); //티어에 해당하는 index 숫자
+		tiers[tind].enqueue(pi);
+		count ++;
+
+		if(tiers[tind].getSize() >=6){ //여섯이 오리라
 			Player[] warriors = new Player[6];
 
-			for(int i = 0; i<6; i++) { //그 티어의 선착순 6명을 뽑아 매치인원(warriors)에 저장
-				warriors[i] = tiers[tind].dequeue();
-			}
 
-			//이웃한 티어의 대기순서 비교,현재티어 = tind, 하위 티어 = tind - 1, 상위 티어 = tind + 1
-			for (int i = -1; i <= 1; i +=2){
-				if (tind + i < 0 || tind + i > 6){ //아이언, 다이아라 하위 혹은 상위 티어가 없는 경우는 생략
-					continue;
+			if(tind == 0){  //6명이 모인 티어가 아이언이라, 이웃한 하위 티어가 없는 경우
+				if (tiers[tind+1].peek().order < tiers[tind].peek().order){
+					warriors[0] = tiers[tind+1].dequeue().player;
+				}
+				warriors[1] = tiers[tind].dequeue().player;
+			}
+			else if(tind == 6){ //6명이 모인 티어가 다이아라, 이웃한 상위 티어가 없는 경우
+				if (tiers[tind-1].peek().order < tiers[tind].peek().order){
+					warriors[0] = tiers[tind-1].dequeue().player;
+				}
+				warriors[1] = tiers[tind].dequeue().player;
+			}
+			else{ //그 외 일반적인 상황
+				if (tiers[tind+1].peek().order < tiers[tind].peek().order && tiers[tind+1].peek().order < tiers[tind-1].peek().order){
+					warriors[0] = tiers[tind+1].dequeue().player;
+					if(tiers[tind-1].peek().order < tiers[tind].peek().order){
+						warriors[1] = tiers[tind-1].dequeue().player;
+					}
+					else{
+						warriors[1] = tiers[tind].dequeue().player;
+					}
+				}
+				else if (tiers[tind-1].peek().order < tiers[tind].peek().order && tiers[tind-1].peek().order < tiers[tind+1].peek().order){
+					warriors[0] = tiers[tind-1].dequeue().player;
+					if(tiers[tind+1].peek().order < tiers[tind].peek().order){
+						warriors[1] = tiers[tind+1].dequeue().player;
+					}
+					else{
+						warriors[1] = tiers[tind].dequeue().player;
+					}
 				}
 
-				if(!tiers[tind + i].isEmpty()){ //이웃 티어의 인원이 비어있지 않다면
-
-					Player neighbor = tiers[tind + i].peek();
-
-					/*
-
-					if(neighbor.equals(warriors[5]) || neighbor.equals(warriors[4])){
-						continue;
-					}
-
-					if(tiers[tind].getSize() < 6 || neighbor.getPlayerID() < warriors[5].getPlayerID()){
-						warriors[5] = tiers[tind + i].dequeue();
-					}
-					else if (neighbor.getPlayerID() < warriors[4].getPlayerID()){
-						warriors[4] = tiers[tind + i].dequeue();
-					}
-
-					 */
+				else{
+					warriors[0] = tiers[tind].dequeue().player;
 				}
 			}
+
+			warriors[2] = tiers[tind].dequeue().player;
+			warriors[3] = tiers[tind].dequeue().player;
+			warriors[4] = tiers[tind].dequeue().player;
+			warriors[5] = tiers[tind].dequeue().player;
+
 			return warriors;
 		}
-
-
-
 		return null;
+		
+
 	}
 }
