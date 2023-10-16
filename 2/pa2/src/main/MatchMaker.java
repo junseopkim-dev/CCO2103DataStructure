@@ -84,7 +84,7 @@ public class MatchMaker implements IMatchMaker {
 			else{ //그 외 일반적인 상황
 				if (tiers[tind + 1].getSize() > 0 &&tiers[tind - 1].getSize() > 0 &&tiers[tind+1].peek().order < tiers[tind].peek().order && tiers[tind+1].peek().order < tiers[tind-1].peek().order){
 					warriors[0] = tiers[tind+1].dequeue().player;
-					if(tiers[tind-1].peek().order < tiers[tind].peek().order){
+					if(tiers[tind - 1].getSize() > 0 &&tiers[tind-1].peek().order < tiers[tind].peek().order){
 						warriors[1] = tiers[tind-1].dequeue().player;
 					}
 					else{
@@ -93,7 +93,7 @@ public class MatchMaker implements IMatchMaker {
 				}
 				else if (tiers[tind + 1].getSize() > 0 &&tiers[tind - 1].getSize() > 0 &&tiers[tind-1].peek().order < tiers[tind].peek().order && tiers[tind-1].peek().order < tiers[tind+1].peek().order){
 					warriors[0] = tiers[tind-1].dequeue().player;
-					if(tiers[tind+1].peek().order < tiers[tind].peek().order){
+					if(tiers[tind + 1].getSize() > 0 &&tiers[tind+1].peek().order < tiers[tind].peek().order){
 						warriors[1] = tiers[tind+1].dequeue().player;
 					}
 					else{
