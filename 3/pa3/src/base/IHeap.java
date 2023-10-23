@@ -5,5 +5,5 @@ public interface IHeap<T extends Comparable> {
     void clear();
     int getSize();
     boolean isEmpty();
-    void merge(IHeap<T> otherHeap);
+    void merge(Heap<T> otherHeap);
 }

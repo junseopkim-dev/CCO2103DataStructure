@@ -1,6 +1,6 @@
 /*
- * Name: Junseop Kim
- * Student ID #: 2019134006
+ * Name:
+ * Student ID #:
  */
 
 /*

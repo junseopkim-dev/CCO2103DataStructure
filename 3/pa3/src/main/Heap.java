@@ -1,6 +1,6 @@
 /*
- * Name: Junseop Kim
- * Student ID #: 2019134006
+ * Name:
+ * Student ID #:
  */
 
 /*
@@ -91,7 +91,7 @@ public final class Heap<T extends Comparable> implements IHeap<T> {
     }
 
     @Override
-    public void merge(IHeap<T> otherHeap) {
+    public void merge(Heap<T> otherHeap) {
         /*
          * Function input:
          *  + otherHeap: heap to merge with.
