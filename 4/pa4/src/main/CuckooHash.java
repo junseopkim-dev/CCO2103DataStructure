@@ -1,6 +1,6 @@
 /*
- * Name:
- * Student ID #:
+ * Name: Junseop Kim
+ * Student ID #: 2019134006
  */
 
 /*
