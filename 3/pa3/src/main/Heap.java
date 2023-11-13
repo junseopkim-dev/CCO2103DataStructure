@@ -14,7 +14,7 @@ public final class Heap<T extends Comparable> implements IHeap<T> {
      * you may declare variables here
      */
 
-    private int init_size = 10;
+    private int init_size = 1000;
     private T[] heap;
     private int size;
 

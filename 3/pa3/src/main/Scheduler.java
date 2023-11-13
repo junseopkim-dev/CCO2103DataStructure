@@ -13,22 +13,22 @@ public final class Scheduler implements IScheduler {
     /*
      * you may declare variables here
      */
-    private Heap<JobWrapper> jobPool;
+    private Heap<Task> heap;
 
     // patience 처리를 위한 임의의 클래스 정의
-    private class JobWrapper implements Comparable<JobWrapper>{
+    private class Task implements Comparable<Task>{
         private IJob job;
 
-        public JobWrapper(IJob job){
+        public Task(IJob job){
             this.job = job;
         }
 
         @Override
-        public int compareTo(JobWrapper other){
-            int patienceComparison = Integer.compare(this.job.getPatience(), other.job.getPatience());
+        public int compareTo(Task other){
+            int comp = Integer.compare(this.job.getPatience(), other.job.getPatience());
 
-            if(patienceComparison !=0){
-                return patienceComparison;
+            if(comp !=0){
+                return comp;
             }
             return Integer.compare(this.job.getPid(), other.job.getPid());
         }
@@ -40,7 +40,7 @@ public final class Scheduler implements IScheduler {
         /*
          * implement your constructor here.
          */
-        jobPool = new Heap<>();
+        heap = new Heap<>();
     }
 
     @Override
@@ -52,7 +52,7 @@ public final class Scheduler implements IScheduler {
          * Does:
          * add j to the job pool.
          */
-        jobPool.insert(new JobWrapper(j));
+        heap.insert(new Task(j));
     }
 
     @Override
@@ -68,18 +68,18 @@ public final class Scheduler implements IScheduler {
          * if the job is done, then remove it from the job pool and return the job.
          * otherwise, do not remove the served job from the job pool and return null.
          */
-        if(jobPool.isEmpty()){
+        if(heap.isEmpty()){
             return null;
         }
 
-        JobWrapper jobWrapper = jobPool.removeMin();
-        jobWrapper.job.serve();
+        Task Task = heap.removeMin();
+        Task.job.serve();
 
-        if(jobWrapper.job.isDone()){
-            return jobWrapper.job;
+        if(Task.job.isDone()){
+            return Task.job;
         }
         else{
-            jobPool.insert(jobWrapper);
+            heap.insert(Task);
             return null;
         }
     }
