@@ -118,12 +118,12 @@ public final class CuckooHash implements ICuckooHash{
         return (a * x + b) % N;
     }
 
-    private void first_insert(int x) {
+    private void insertA1(int x) {
         int Hash1 = this.h1(x);
         A1[Hash1] = x;
     }
 
-    private void second_insert(int x) {
+    private void insertA2(int x) {
         int Hash2 = this.h2(x);
         A2[Hash2] = x;
     }
@@ -146,15 +146,15 @@ public final class CuckooHash implements ICuckooHash{
         HFParams();
 
         while (prevOrder.size != 0) {
-            int current_E = prevOrder.pop();
-            int prevHash1 = h(prevParams.a1, prevParams.b1, prevParams.N, current_E);
-            if ((prevA1[prevHash1] == current_E) && (prevA1[prevHash1]!=emptyValue)) {
-                this.insert(current_E);
+            int currentE = prevOrder.pop();
+            int prevHash1 = h(prevParams.a1, prevParams.b1, prevParams.N, currentE);
+            if ((prevA1[prevHash1] == currentE) && (prevA1[prevHash1]!=emptyValue)) {
+                this.insert(currentE);
                 continue;
             }
-            int prevHash2 = h(prevParams.a2, prevParams.b2, prevParams.N, current_E);
-            if ((prevA2[prevHash2] == current_E) && (prevA2[prevHash2]!=emptyValue)) {
-                this.insert(current_E);
+            int prevHash2 = h(prevParams.a2, prevParams.b2, prevParams.N, currentE);
+            if ((prevA2[prevHash2] == currentE) && (prevA2[prevHash2]!=emptyValue)) {
+                this.insert(currentE);
             }
         }
     }
@@ -223,6 +223,7 @@ public final class CuckooHash implements ICuckooHash{
 
         if (((double) (this.size + 1) / (2 * this.N)) >= this.threshold) {
             this.resize();
+            this.insert(x);
         }
         else{
             int chain = 0;
@@ -230,7 +231,7 @@ public final class CuckooHash implements ICuckooHash{
                 int Hash1 = this.h1(x);
                 if (A1[Hash1] != emptyValue) {
                     int temp = this.A1[Hash1];
-                    first_insert(x);
+                    insertA1(x);
                     x = temp;
                     chain += 1;
                 }
@@ -241,13 +242,14 @@ public final class CuckooHash implements ICuckooHash{
 
                 if (chain >= this.chainLength){
                     resize();
+                    this.insert(x);
                     break;
                 }
 
                 int Hash2 = this.h2(x);
                 if (A2[Hash2] != emptyValue) {
                     int temp = A2[Hash2];
-                    this.second_insert(x);
+                    this.insertA2(x);
                     x = temp;
                     chain += 1;
                 }
@@ -258,6 +260,7 @@ public final class CuckooHash implements ICuckooHash{
 
                 if (chain >= this.chainLength) {
                     resize();
+                    this.insert(x);
                     break;
                 }
             }
