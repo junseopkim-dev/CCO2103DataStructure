@@ -17,11 +17,152 @@ public final class CuckooHash implements ICuckooHash{
      * you may declare additional variables here
      */
 
+
+    Queue Order = new Queue();
+    int emptyValue = Integer.MIN_VALUE;
+    int[] A1, A2; // 해쉬테이블 2개 A1,A2
+    double threshold;
+    int chainLength;
+    int size;
+    Random rand = new Random();
+
+
+
     CuckooHash(double threshold, int chainLength, int N) {
         /*
          * implement your constructor here.
          */
+
+        this.threshold = threshold;
+        this.chainLength = chainLength;
+        this.N = N;
+        this.A1 = new int[N];
+        this.A2 = new int[N];
+        this.size = 0;
+        for (int i = 0; i<N; i++){
+            A1[i] = emptyValue;
+            A2[i] = emptyValue;
+        }
+        HFParams();
     }
+
+    //custom methods starts
+
+    private class Node{
+        int E;
+        Node next;
+
+        Node(int E){
+            this.E = E;
+        }
+    }
+
+    //큐 이용한 구현
+    private class Queue{
+        Node head;
+        Node tail;
+        int size;
+
+        Queue(){
+            this.head = null;
+            this.tail = null;
+            this.size = 0;
+        }
+
+        void push(Node N){
+            if (this.size == 0) {
+                this.head = N;
+                this.tail = N;
+                size++;
+            }
+            else{
+                this.tail.next = N;
+                this.tail = N;
+                size++;
+            }
+
+        }
+
+        int pop() {
+            if (this.size==1){
+                int result = this.head.E;
+                this.head = null;
+                this.tail = null;
+                this.size = 0;
+                return result;
+            }
+            int result = this.head.E;
+            this.head = this.head.next;
+            size--;
+            return result;
+        }
+    }
+    private void HFParams(){
+        //hash function의 매개변수를 조건에 맞는 난수로 설정
+        a1 = rand.nextInt(N-1) + 1;
+        a2 = rand.nextInt(N-1) + 1;
+        b1 = rand.nextInt(N);
+        b2 = rand.nextInt(N);
+    }
+
+    private int h1(int x){
+        return (this.a1 * x + this.b1) %this.N;
+    }
+
+
+    private int h2(int x){
+        return (this.a2 * x + this.b2) %this.N;
+    }
+
+    private int h(int a, int b, int N, int x) {
+        return (a * x + b) % N;
+    }
+
+    private void first_insert(int x) {
+        int Hash1 = this.h1(x);
+        A1[Hash1] = x;
+    }
+
+    private void second_insert(int x) {
+        int Hash2 = this.h2(x);
+        A2[Hash2] = x;
+    }
+
+    private void resize() {
+        HashParameter prevParams = this.getParams();
+        int[] prevA1 = this.A1;
+        int[] prevA2 = this.A2;
+        Queue prevOrder = this.Order;
+
+        N = 2 * N;
+        this.A1 = new int[N];
+        this.A2 = new int[N];
+        for (int i = 0; i<N; i++){
+            A1[i] = emptyValue;
+            A2[i] = emptyValue;
+        }
+        this.Order = new Queue();
+        this.size = 0;
+        HFParams();
+
+        while (prevOrder.size != 0) {
+            int current_E = prevOrder.pop();
+            int prevHash1 = h(prevParams.a1, prevParams.b1, prevParams.N, current_E);
+            if ((prevA1[prevHash1] == current_E) && (prevA1[prevHash1]!=emptyValue)) {
+                this.insert(current_E);
+                continue;
+            }
+            int prevHash2 = h(prevParams.a2, prevParams.b2, prevParams.N, current_E);
+            if ((prevA2[prevHash2] == current_E) && (prevA2[prevHash2]!=emptyValue)) {
+                this.insert(current_E);
+            }
+        }
+    }
+
+
+
+
+    //custom methods ends
 
     @Override
     public boolean contains(int x) {
@@ -32,7 +173,10 @@ public final class CuckooHash implements ICuckooHash{
          * Does:
          * returns true if x is in the hash table. returns false otherwise.
          */
-        return false;
+        int Hash1 = this.h1(x);
+        int Hash2 = this.h2(x);
+        return A1[Hash1] == x || A2[Hash2] == x;
+
     }
 
     @Override
@@ -45,7 +189,22 @@ public final class CuckooHash implements ICuckooHash{
          * if x is in the hash table, deletes x from the hash table.
          * otherwise, do nothing.
          */
+
+
+
+        int Hash1 = this.h1(x);
+        int Hash2 = this.h2(x);
+        if (A1[Hash1] ==x){
+            A1[Hash1] = emptyValue;
+            size --;
+        }
+        else if(A2[Hash2] == x){
+            A2[Hash2] = emptyValue;
+            size --;
+        }
     }
+
+
 
     @Override
     public void insert(int x) {
@@ -57,7 +216,55 @@ public final class CuckooHash implements ICuckooHash{
          * if x is not in the hash table, inserts x to the hash table according to the behavior specification.
          * otherwise, do nothing.
          */
+        if (contains(x)) {
+            return;
+        }
+        this.Order.push(new Node(x));
+
+        if (((double) (this.size + 1) / (2 * this.N)) >= this.threshold) {
+            this.resize();
+        }
+        else{
+            int chain = 0;
+            while (true){
+                int Hash1 = this.h1(x);
+                if (A1[Hash1] != emptyValue) {
+                    int temp = this.A1[Hash1];
+                    first_insert(x);
+                    x = temp;
+                    chain += 1;
+                }
+                else{
+                    A1[Hash1] = x;
+                    break;
+                }
+
+                if (chain >= this.chainLength){
+                    resize();
+                    break;
+                }
+
+                int Hash2 = this.h2(x);
+                if (A2[Hash2] != emptyValue) {
+                    int temp = A2[Hash2];
+                    this.second_insert(x);
+                    x = temp;
+                    chain += 1;
+                }
+                else{
+                    A2[Hash2] = x;
+                    break;
+                }
+
+                if (chain >= this.chainLength) {
+                    resize();
+                    break;
+                }
+            }
+        }
     }
+
+
 
     // implemented for you. do not change this method.
     @Override
