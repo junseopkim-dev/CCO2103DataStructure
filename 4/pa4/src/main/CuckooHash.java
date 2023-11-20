@@ -106,16 +106,16 @@ public final class CuckooHash implements ICuckooHash{
     }
 
     private int h1(int x){
-        return (this.a1 * x + this.b1) %this.N;
+        return (((this.a1 * x + this.b1) %this.N)+this.N)%this.N;
     }
 
 
     private int h2(int x){
-        return (this.a2 * x + this.b2) %this.N;
+        return (((this.a2 * x + this.b2) %this.N)+this.N)%this.N;
     }
 
     private int h(int a, int b, int N, int x) {
-        return (a * x + b) % N;
+        return (((a * x + b) % N)+N)%N;
     }
 
     private void insertA1(int x) {

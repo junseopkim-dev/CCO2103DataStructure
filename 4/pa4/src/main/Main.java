@@ -26,7 +26,11 @@ public class Main {
 		System.out.println(hprev.N==hnext.N);
 
 		System.out.println("-------------");
+		System.out.println("a1 : "+c.getParams().a1);
+		System.out.println("b1 : "+c.getParams().b1);
 
+		System.out.println("a2 : "+c.getParams().a2);
+		System.out.println("b2 : "+c.getParams().b2);
 		for(int i = 0; i<c.N;i++){
 			System.out.println(c.A1[i]);
 		}
@@ -35,7 +39,7 @@ public class Main {
 		}
 		System.out.println("-------------");
 
-		c.insert(108);
+		c.insert(-108);
 		hnext = c.getParams();
 		System.out.println(hprev.a1==hnext.a1);
 		System.out.println(hprev.a2==hnext.a2);
@@ -47,6 +51,12 @@ public class Main {
 		System.out.println("-------------");
 		//System.out.println("You can implement your test code here.");
 
+		System.out.println("a1 : "+c.getParams().a1);
+		System.out.println("b1 : "+c.getParams().b1);
+
+		System.out.println("a2 : "+c.getParams().a2);
+		System.out.println("b2 : "+c.getParams().b2);
+
 		for(int i = 0; i<c.N;i++){
 			System.out.println(c.A1[i]);
 		}
@@ -59,6 +69,11 @@ public class Main {
 		c.delete(104);
 		System.out.println("-------------");
 
+		System.out.println("a1 : "+c.getParams().a1);
+		System.out.println("b1 : "+c.getParams().b1);
+
+		System.out.println("a2 : "+c.getParams().a2);
+		System.out.println("b2 : "+c.getParams().b2);
 		for(int i = 0; i<c.N;i++){
 			System.out.println(c.A1[i]);
 		}
@@ -67,19 +82,28 @@ public class Main {
 		}
 		System.out.println("-------------");
 
-		c.delete(104);
+		c.delete(108);
 
 		for (int i = 100; i<121; i++){
 			c.insert(i);
 		}
 		System.out.println("-------------");
+		System.out.println("-------------");
+		System.out.println("a1 : "+c.getParams().a1);
+		System.out.println("b1 : "+c.getParams().b1);
+
+		System.out.println("a2 : "+c.getParams().a2);
+		System.out.println("b2 : "+c.getParams().b2);
+		System.out.println("N : "+c.getParams().N);
 
 		for(int i = 0; i<c.N;i++){
 			System.out.println(c.A1[i]);
 		}
+		System.out.println("-------------");
 		for(int i = 0; i<c.N;i++){
 			System.out.println(c.A2[i]);
 		}
+		System.out.println("-------------");
 		System.out.println("-------------");
 
 	}
