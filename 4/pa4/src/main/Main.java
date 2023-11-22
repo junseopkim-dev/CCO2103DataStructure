@@ -95,6 +95,7 @@ public class Main {
 		System.out.println("a2 : "+c.getParams().a2);
 		System.out.println("b2 : "+c.getParams().b2);
 		System.out.println("N : "+c.getParams().N);
+		c.delete(104);
 
 		for(int i = 0; i<c.N;i++){
 			System.out.println(c.A1[i]);

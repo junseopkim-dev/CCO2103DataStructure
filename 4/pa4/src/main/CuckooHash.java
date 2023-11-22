@@ -18,14 +18,14 @@ public final class CuckooHash implements ICuckooHash{
      */
 
 
-    Queue Order = new Queue();
+
     int emptyValue = Integer.MIN_VALUE;
     int[] A1, A2; // 해쉬테이블 2개 A1,A2
     double threshold;
     int chainLength;
     int size;
     Random rand = new Random();
-
+    Queue Order = new Queue();
 
 
     CuckooHash(double threshold, int chainLength, int N) {
@@ -85,16 +85,16 @@ public final class CuckooHash implements ICuckooHash{
 
         int pop() {
             if (this.size==1){
-                int result = this.head.E;
+                int popped = this.head.E;
                 this.head = null;
                 this.tail = null;
                 this.size = 0;
-                return result;
+                return popped;
             }
-            int result = this.head.E;
+            int popped = this.head.E;
             this.head = this.head.next;
             size--;
-            return result;
+            return popped;
         }
     }
     private void HFParams(){
@@ -133,8 +133,7 @@ public final class CuckooHash implements ICuckooHash{
         int[] prevA1 = this.A1;
         int[] prevA2 = this.A2;
         Queue prevOrder = this.Order;
-
-        N = 2 * N;
+        N *= 2;
         this.A1 = new int[N];
         this.A2 = new int[N];
         for (int i = 0; i<N; i++){
@@ -145,15 +144,15 @@ public final class CuckooHash implements ICuckooHash{
         this.size = 0;
         HFParams();
 
-        while (prevOrder.size != 0) {
+        while (prevOrder.size > 0) {
             int currentE = prevOrder.pop();
             int prevHash1 = h(prevParams.a1, prevParams.b1, prevParams.N, currentE);
-            if ((prevA1[prevHash1] == currentE) && (prevA1[prevHash1]!=emptyValue)) {
+            int prevHash2 = h(prevParams.a2, prevParams.b2, prevParams.N, currentE);
+            if (prevA1[prevHash1] == currentE) {
                 this.insert(currentE);
                 continue;
             }
-            int prevHash2 = h(prevParams.a2, prevParams.b2, prevParams.N, currentE);
-            if ((prevA2[prevHash2] == currentE) && (prevA2[prevHash2]!=emptyValue)) {
+            if (prevA2[prevHash2] == currentE) {
                 this.insert(currentE);
             }
         }

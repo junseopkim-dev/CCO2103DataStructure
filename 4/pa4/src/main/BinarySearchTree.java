@@ -10,7 +10,7 @@
  */
 
 public final class BinarySearchTree<T extends Comparable> implements IBinarySearchTree<T> {
-    // AVL 트리로 구현했다.
+    // AVL 트리로 구현
     
     /*
      * you may declare variables here
@@ -29,8 +29,7 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
 
 
     //custom methods starts
-    
-    //원활한 트리구조 구현을 위한 노드 클래스 구현
+
     private class Node{
         T data;
         Node left, right;
@@ -58,7 +57,6 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
         return height(N.left) - height(N.right);
     }
 
-    // 트리 내에서 최솟값
     private Node minValueNode(Node node){
         Node current = node;
         while (current.left != null){
@@ -67,41 +65,32 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
         return current;
     }
 
-    // root가 노드 x인 트리 Left Rotate 시키는 함수 leftRotate 정의
     private Node leftRotate(Node x){
         Node y = x.right;
         Node T2 = y.left;
 
-        // rotation 수행
         y.left = x;
         x.right = T2;
 
-        // height 업데이트
         x.height = Math.max(height(x.left), height(x.right)) + 1;
         y.height = Math.max(height(y.left), height(y.right)) + 1;
 
-        // 새로운 root node 반환
         return y;
     }
 
-    // root가 노드 y인 트리 Right Rotate 시키는 함수 rightRotate 정의
     private Node rightRotate(Node y){
         Node x = y.left;
         Node T2 = x.right;
 
-        // rotation 수행
         x.right = y;
         y.left = T2;
 
-        // height 업데이트
         y.height = Math.max(height(y.left), height(y.right)) + 1;
         x.height = Math.max(height(x.left), height(x.right)) + 1;
 
-        // 새로운 root node 반환
         return x;
     }
 
-    // contains 메소드 노드로 구현하기 위한 커스텀 함수 별도 정의
     private boolean contains(Node node, T entry){
         if (node == null){
             return false;
@@ -118,7 +107,6 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
         }
     }
 
-    // put메소드 노드로 구현하기 위한 커스텀 함수 별도 정의
     private Node put(Node node, T entry){
         if (node == null){
             size++;
@@ -135,10 +123,8 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
             return node;
         }
 
-        //height 업데이트
         node.height = 1 + Math.max(height(node.left), height(node.right));
 
-        // balance factor 계산
         int balance = getBalance(node);
 
         // 언밸런스 4가지 경우; LL, LR, RR, RL
@@ -169,7 +155,6 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
     }
 
 
-    // remove메소드 노드로 구현하기 위한 커스텀 함수 별도 정의
     private Node remove(Node node, T entry){
         if (node == null){
             return node;
@@ -223,10 +208,9 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
             return node;
         }
 
-        //height 업데이트
         node.height = 1 + Math.max(height(node.left), height(node.right));
 
-        // balance factor 계산
+        // balance factor
         int balance = getBalance(node);
 
         // 언밸런스 4가지 경우; LL, LR, RR, RL
@@ -256,7 +240,6 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
         return node;
     }
 
-    // getNext메소드 노드로 구현하기 위한 커스텀 함수 별도 정의
     private T getNext(Node node, T threshold, T current){
         if (node == null){
             return current;
@@ -270,7 +253,6 @@ public final class BinarySearchTree<T extends Comparable> implements IBinarySear
         }
     }
 
-    // getPrev 메소드 노드로 구현하기 위한 커스텀 함수 별도 정의
     private T getPrev(Node node, T threshold, T current){
         if (node == null){
             return current;
