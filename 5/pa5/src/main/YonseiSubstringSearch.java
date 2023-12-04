@@ -16,7 +16,7 @@ public final class YonseiSubstringSearch implements IYonseiSubstringSearch {
      * you may declare variables here
      */
 
-    public YonseiString text;
+    YonseiString text;
 
     //custom methods starts
     private int[] matchTable(YonseiString p) {
